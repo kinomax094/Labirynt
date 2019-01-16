@@ -1,0 +1,223 @@
+
+import java.util.ArrayList;
+
+import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+
+public class BorderPaneController {
+     private Lab lab;
+     @FXML
+     private BorderPane bord;
+     @FXML
+     private Button buttPrzestaw, buttGeneruj, buttSzukaj;
+     @FXML
+     private TextField textKolumny,textStart,textKoniec,textWiersze,textSzerekosc, textKomórka;
+     @FXML
+     private Group panel;
+     @FXML
+     private CheckBox checkLewo,checkGóra,checkDół,checkPrawo,boxHer ;
+     @FXML
+     private TextArea textAR;
+     String text="";
+     
+     
+     @FXML
+     void initialize(){
+    	 textKolumny.setText("5");
+    	 textWiersze.setText("5");
+    	 textStart.setText("1");
+    	 textKoniec.setText("9");
+    	 textSzerekosc.setText("50");
+    	 try {
+    		 lab= new Lab(Integer.parseInt(textWiersze.getText()),Integer.parseInt(textKolumny.getText()));
+    	 }
+    	 catch(IllegalArgumentException e) {
+    		 textAR.appendText("Proszę podać liczbę nie znak");
+    	 }
+    	 rysuj();
+    	 
+         }
+     
+     void rysuj() {
+    	 rysujKomórki();
+    	 rysujSciany();
+    	 rysujNumer();
+     }
+     void rysujKomórki() {
+    	 int pozX=0;
+    	 int pozY=0;
+    	 int kolumna= lab.getLiczbaKolumn();
+    	 int szerokość= Integer.parseInt(textSzerekosc.getText());
+    	 for(Komórka xx : this.lab.getListaGłówna()) {
+    		 
+    		 Rectangle rect1= new Rectangle(pozX,pozY,szerokość,szerokość);
+    		 
+    		 rect1.setFill(Color.ANTIQUEWHITE);
+    		 
+    		 
+    	     rect1.setStroke(Color.SLATEGRAY);
+    	     rect1.setStrokeWidth(3);
+    		 panel.getChildren().addAll(rect1);
+    		//*************** Update zmienych ********************
+    		if(xx.getNumerLiczba() == kolumna) {
+    			 kolumna= kolumna+ lab.getLiczbaKolumn();
+    			 pozY=pozY+ szerokość;
+    			 pozX=0;
+    		 }
+    		 else { pozX=pozX+ szerokość;
+    			 
+    		 }
+    		 
+    	 }
+    	 pozX=0;
+    	 pozY=0;
+    	 kolumna= lab.getLiczbaKolumn();
+    	 
+    	
+    }
+     void rysujSciany() {
+   	 int pozX=0;
+	 int pozY=0;
+	 int kolumna= lab.getLiczbaKolumn();
+	 int szerokość= Integer.parseInt(textSzerekosc.getText());
+	 for(Komórka xx : this.lab.getListaGłówna()) {
+		 
+		 if(xx.getGórnaS()==false) { // linia górna 
+         	Line line1= new Line(pozX,pozY,pozX+szerokość, pozY);
+         	line1.setStroke(Color.BLACK);
+         	line1.setStrokeWidth(5);
+         	panel.getChildren().addAll(line1);
+         	}
+         if(xx.getPrawS()==false) {
+         	Line line2= new Line(pozX+szerokość, pozY, pozX+szerokość, pozY+szerokość);
+         	line2.setStroke(Color.BLACK);
+         	line2.setStrokeWidth(5);
+         	panel.getChildren().addAll(line2);
+         }
+         if(xx.getDolnaS()==false) {
+         	Line line2= new Line(pozX, pozY+szerokość, pozX+szerokość, pozY+szerokość);
+         	line2.setStroke(Color.BLACK);
+         	line2.setStrokeWidth(5);
+         	panel.getChildren().addAll(line2);
+         }
+         if(xx.getLewaS()==false) {
+         	Line line2= new Line(pozX, pozY, pozX, pozY+szerokość);
+         	line2.setStroke(Color.BLACK);
+         	line2.setStrokeWidth(5);
+         	panel.getChildren().addAll(line2);  
+         }
+         if(xx.getNumerLiczba() == kolumna) {
+			 kolumna= kolumna+ lab.getLiczbaKolumn();
+			 pozY=pozY+ szerokość;
+			 pozX=0;
+		 }
+		 else  pozX=pozX+ szerokość;
+ 	}
+    }
+     void rysujNumer() {
+    	 int pozX=0;
+    	 int pozY=0;
+    	 int kolumna= lab.getLiczbaKolumn();
+    	 
+    	 int szerokość= Integer.parseInt(textSzerekosc.getText());
+    	
+    	 for(Komórka xx : this.lab.getListaGłówna()) {
+    		 
+    		 Text text = new Text();
+    		 
+    		 text.setText(Integer.toString(xx.getNumerLiczba()));
+    		 text.setTranslateX(pozX+3);
+    		 text.setTranslateY(pozY+15);
+    		 
+    		 panel.getChildren().addAll(text);
+    		 
+    		 
+             if(xx.getNumerLiczba() == kolumna) {
+    			 kolumna= kolumna+ lab.getLiczbaKolumn();
+    			 pozY=pozY+ szerokość;
+    			 pozX=0;
+    		 }
+    		 else  pozX=pozX+ szerokość;
+     	}
+     }
+     @FXML
+     void generuj() {
+    	 panel.getChildren().remove(0, panel.getChildren().size()-1);
+    	 try {
+    	 lab = new  Lab(Integer.parseInt(textWiersze.getText()),Integer.parseInt(textKolumny.getText()));
+    	 }
+    	 catch(IllegalArgumentException e) {
+    		 textAR.appendText("Mamy problem musisz podać \nliczbę nie znak");
+    	 }
+    	 rysuj();
+     }
+     @FXML
+     void przestaw(){
+    	 int x=0;
+    	 try {
+    		x = Integer.parseInt(textKomórka.getText());
+    	 }
+    	 catch(IllegalArgumentException e) {
+    		 textAR.clear();
+    		 textAR.appendText("Podaj poprawną liczbę");
+    	 }
+    	 lab.ustawianieScian(checkGóra.isSelected(), checkPrawo.isSelected(), checkDół.isSelected(), checkLewo.isSelected(), x-1);
+    	 rysuj();
+     }
+     @FXML
+     void szukaj() {
+    	 textAR.clear();
+    	 lab.mieszanie();
+    	 int x=0;
+    	 int y=0;
+    	 x=Integer.parseInt(textStart.getText())-1;
+    	 y=Integer.parseInt(textKoniec.getText())-1;
+    	 if(lab.getKomórka(x).getSizeOfList()!=0) {
+    		 try {
+    			lab.szukajDrogi(x, y, boxHer.isSelected());}
+    		 catch(IllegalArgumentException e) {
+    			 textAR.clear();
+    			 textAR.appendText("Podane argumenty są blądne\n");
+    		 }
+    		 if(lab.getListNaRozwiązanie().size()==0) {
+    			 text="Nie ma drogi między punktami.\n";
+    		 }
+    		 else {
+    			 text="Algorytm wyszukał następującej drogę:\n";
+    			 int i=0;
+    			 for(Komórka xx : this.lab.getListNaRozwiązanie()) {
+    				 text= text+ xx.getNumerLiczba() + " ";
+    				 if(i ==10) {
+    					 text=text+"\n";
+    					 i=0;
+    				 }
+    			i++;
+    		 }
+    		text= text + "\n";
+    		}
+    		 text=text+"Liczba wywołań funkcji: "+ this.lab.getLiczbaWywołań();
+    		 this.lab.resetowanieDostepnosci();
+    		 this.lab.restetowanieLiczbaWywołań();
+    		 textAR.appendText(text);
+    		 }
+    	 
+    	 else textAR.appendText("Nie ma drogi pomiędzy punktami");
+    	 text="";
+     }
+    
+}
+     
+     
+     
+
