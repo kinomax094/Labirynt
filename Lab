@@ -1,0 +1,158 @@
+import java.util.ArrayList;
+
+public class Lab {
+	private ArrayList<Komórka> listaGłówna = new ArrayList<Komórka>();
+	private int liczbaWierszy;
+	private int liczbaKolumn;
+	private boolean nieMamyRozwiązania= true;
+	private int liczbaWywołań=0;;
+	private ArrayList<Komórka> listNaRozwiązanie = new ArrayList<Komórka>();
+
+////////////// Construktor ////////////////////////////
+	public Lab (int liczbaWierszy, int liczbaKolumn) {
+		this.liczbaKolumn=liczbaKolumn;
+		this.liczbaWierszy=liczbaWierszy;
+		
+		for(int i=0; i<liczbaWierszy*liczbaKolumn; i++) {
+			
+			Komórka nowaKomórka = new Komórka(i+1);
+			this.listaGłówna.add(nowaKomórka);
+			
+		}
+		this.tworzenieScian();
+		
+	}
+
+	ArrayList<Komórka> getListaGłówna(){
+		return this.listaGłówna;
+	}
+	
+	
+	void tworzenieScian() {
+		int y= liczbaKolumn;
+		for(Komórka x : listaGłówna) {
+		
+		if(x.getNumerLiczba()==liczbaWierszy*liczbaKolumn) {
+			x.setZnak("B");
+			// funkcja losująca dla ostatniego elementu 
+		}
+		else if(x.getNumerLiczba()==y) {  // losowanie dl/a ostatniej kolumny
+			x.setZnak("O");
+			x.tworzenieScianDół(this.listaGłówna, this.liczbaKolumn);
+			y=y+liczbaKolumn;
+		}
+		else if(x.getNumerLiczba()<(liczbaWierszy*liczbaKolumn) && x.getNumerLiczba()>(liczbaWierszy-1)*liczbaKolumn){ // ostatni rząd
+			x.setZnak("L");
+			x.tworzenieScianPrawo(this.listaGłówna);
+		}
+		
+		
+		else {
+			x.tworzeneScianDółPrawo(this.listaGłówna,this.liczbaKolumn); // tworzenie listy dla ostatniego rządu
+			x.setZnak("X");
+		}
+		}
+	}
+	public ArrayList<Komórka> getListNaRozwiązanie(){
+		return this.listNaRozwiązanie;
+	}
+		
+	
+	void restetowanieLiczbaWywołań(){
+		this.liczbaWywołań=0;
+	}
+	int getLiczbaWywołań() {
+		return this.liczbaWywołań;
+	}
+	int getLiczbaWierszy() {
+		return this.liczbaWierszy;
+	}
+	int getLiczbaKolumn() {
+		return this.liczbaKolumn;
+	}
+	public Komórka getKomórka(int x) {
+		return this.listaGłówna.get(x);
+	}
+	
+	public void drukujLab() {
+		for(Komórka x : this.listaGłówna) {
+			System.out.println(x.getNumerLiczba() + " " + x.getGórnaS()+ " " + x.getPrawS() +  " "+ x.getDolnaS()  + " "+x.getLewaS() + " " + x.getZnak() );
+			ArrayList<Komórka> list=x.getList();
+			for(Komórka xx : list) {
+				System.out.print(xx.getNumerLiczba()+ " ");
+			} 
+			System.out.println("");
+		} 
+	}
+	public void setNieMamyRozwiązania(boolean x) {
+		this.nieMamyRozwiązania=x;
+	}
+
+	//***************************Wyszykiwanie Drogi *******************************************
+	
+	
+	public  void szukajDrogi(int liczbaStart, int liczbaKoncowa,  boolean hermetyk) {
+		this.liczbaWywołań++;
+		Komórka start=this.getKomórka(liczbaStart);
+		start.setDostepnosc(false);
+		if(hermetyk){
+				start.sortowanietablicy(liczbaStart, liczbaKoncowa, this.liczbaKolumn);
+		}
+		int i=0;		
+		Komórka nextKomórka;
+
+		
+		do {
+			
+			nextKomórka=start.getElementOfList(i);
+			i++;
+			if(nextKomórka.getDostepnosc()) {
+				this.listNaRozwiązanie.add(nextKomórka);
+				
+				
+				if(nextKomórka.getNumerLiczba() != liczbaKoncowa+1){
+					this.szukajDrogi(nextKomórka.getNumerLiczba()-1, liczbaKoncowa, hermetyk);
+					start=this.getKomórka(liczbaStart);
+					nextKomórka=this.getKomórka(liczbaStart).getElementOfList(i-1);
+					if(nieMamyRozwiązania==true ){
+					this.listNaRozwiązanie.remove(this.listNaRozwiązanie.size()-1);
+					}
+				}
+				else {
+					this.nieMamyRozwiązania=false;
+					}
+			}
+	
+			
+			
+		}while(nieMamyRozwiązania && start.getSizeOfList()>i );
+	}
+	
+	public void ustawianieScian(boolean góra, boolean praw, boolean dół, boolean lewo, int x) {
+		
+		Komórka elementDoPrzestawienia = this.getKomórka(x);
+		//****************************USTAWIANIE DLA GÓRY**********************************************
+		elementDoPrzestawienia.przestawienieGórnejS(góra, liczbaKolumn, listaGłówna);
+		//****************************USTAWIANIE DLA PRAWA*********************************************
+		elementDoPrzestawienia.przestawieniePrawejS(praw, liczbaKolumn, listaGłówna);
+		//****************************USTAWIANIE DLA DOŁU**********************************************
+		elementDoPrzestawienia.przestawienieDółS(dół, liczbaKolumn, listaGłówna);
+		//****************************USTAWIANIE DLA LEWA**********************************************
+		elementDoPrzestawienia.przestawienieLewoS(lewo, liczbaKolumn, listaGłówna);
+	}
+  
+	void resetowanieDostepnosci() {
+		this.nieMamyRozwiązania=true;
+		this.listNaRozwiązanie=null;
+		listNaRozwiązanie= new ArrayList<Komórka>(10);
+		for(Komórka x : this.listaGłówna) {
+			x.setDostepnosc(true);
+		}
+	}
+	void  mieszanie () {
+		for(Komórka x : this.listaGłówna) {
+			x.mieszanieList();
+			
+		}
+	}
+}
