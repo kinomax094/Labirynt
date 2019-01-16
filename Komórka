@@ -1,0 +1,341 @@
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Komórka {
+	boolean dostepnosc;
+	String znak ="";
+	int numerLiczba;
+	boolean lewaS;
+	boolean prawaS;
+	boolean górnaS;
+	boolean dolnaS;
+	boolean kolor;
+	ArrayList<Komórka> list = new ArrayList<Komórka>();
+	
+    Komórka(int x){
+	this.numerLiczba=x;
+	this.lewaS=false;
+	this.prawaS=false;
+	this.górnaS=false;
+	this.dolnaS=false;
+	boolean kolor=false;
+	this.dostepnosc = true;
+}
+
+////////////// Get ///////////////////////	
+	public String getZnak() {
+		return this.znak;
+	}
+    public boolean getDostepnosc() {
+    	return this.dostepnosc;
+    }
+    
+    public int getNumerLiczba() {
+		return this.numerLiczba;
+	}
+	public boolean getLewaS() {
+		return this.lewaS;
+	}
+	public boolean getPrawS() {
+		return this.prawaS;
+	}
+	public boolean getGórnaS() {
+		return this.górnaS;
+	}
+	public boolean getDolnaS() {
+		return this.dolnaS;
+	}
+	public ArrayList<Komórka> getList(){
+		return this.list;
+	}
+	public int getSizeOfList() {
+		return this.list.size();
+	}
+	public Komórka getElementOfList(int i) {
+		return this.list.get(i);
+	}
+	public boolean getKolor() {
+		return this.kolor;
+	}
+////////////// Set ////////////////////
+	public void setZnak(String x) {
+		this.znak=x;
+	}
+	public void setDostepnosc(boolean x) {
+		this.dostepnosc=x;
+	}
+	public void setNumerLiczba(int x) {
+		this.numerLiczba=x;
+	}
+	public void setLewaS(boolean x) {
+		 this.lewaS=x;
+	}
+	public void setPrawS(boolean x) {
+		this.prawaS=x;
+	}
+	public void setGórnaS(boolean x) {
+		this.górnaS=x;
+	}
+	public void setDolnaS(boolean x) {
+		this.dolnaS=x;
+	}
+	public void setKolor(boolean x) {
+		this.kolor=x;
+	}
+	
+//////////// Obsługa List /////////////////
+	
+	public void dodawanieDoList(Komórka x) {
+		this.list.add(x);
+	}
+	public Komórka pobranieDoList(int x) {
+		return this.list.get(x);
+	}
+	public void usuwanieList(Komórka x) {
+		this.list.remove(x);
+	}
+	public void mieszanieList() {
+		if(this.list.size()!=0) {
+		Random random = new Random();
+		int x =2  + random.nextInt(10);
+		for(int i=0; i<x; i++) {
+			Random random2 = new Random();
+			int y = random2.nextInt(this.list.size());
+			 Komórka k=this.list.get(y);
+			 this.list.remove(k);
+			 this.list.add(k);
+			
+		}
+		}
+	}
+
+
+////////// Obsługa Komórek ///////////////
+	void tworzenieScianPrawo(ArrayList<Komórka> listGłowna) {
+		Random random = new Random();
+		int x = random.nextInt(101);
+		if(x<49) {
+			this.laczPraw(listGłowna);
+		}
+	}
+	void tworzenieScianDół(ArrayList<Komórka> listGłowna, int kolum) {
+		Random random = new Random();
+		int x = random.nextInt(101);
+		if(x<49) {
+			this.laczDół(listGłowna,  kolum);
+		}
+	}
+	void tworzeneScianDółPrawo(ArrayList<Komórka> listGłowna, int kolum) {
+		Random random = new Random();
+		int x = random.nextInt(101);
+		if(x>=50) {
+			this.laczPraw(listGłowna);
+			this.laczDół(listGłowna, kolum);
+		}
+		else if (x>=24 && x<50) {
+			this.laczPraw(listGłowna);
+		}
+		else this.laczDół(listGłowna, kolum);
+		}
+	void laczLewo(ArrayList<Komórka> listGłowna) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()-2);
+		this.dodawanieDoList(x);
+		x.dodawanieDoList(this);
+		this.setLewaS(true);
+		x.setPrawS(true);
+	}
+	void usunLewo(ArrayList<Komórka> listGłowna) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()-2);
+		this.usuwanieList(x);
+		x.usuwanieList(this);
+		this.setLewaS(false);
+		x.setPrawS(false);
+	}
+	void laczPraw(ArrayList<Komórka> listGłowna) {
+		Komórka x = listGłowna.get(this.getNumerLiczba());
+		this.dodawanieDoList(x);
+		x.dodawanieDoList(this);
+		this.setPrawS(true);
+		x.setLewaS(true);
+		
+		}
+	void usunPraw(ArrayList<Komórka> listGłowna) {
+		Komórka x = listGłowna.get(this.getNumerLiczba());
+		this.usuwanieList(x);
+		x.usuwanieList(this);
+		this.setPrawS(false);
+		x.setLewaS(false);
+		}
+	void laczDół(ArrayList<Komórka> listGłowna, int kolum) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()+kolum-1);
+		this.dodawanieDoList(x);
+		x.dodawanieDoList(this);
+		this.setDolnaS(true);
+		x.setGórnaS(true);
+	}
+	void usunDół(ArrayList<Komórka> listGłowna, int kolum) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()+kolum-1);
+		this.usuwanieList(x);
+		x.usuwanieList(this);
+		this.setDolnaS(false);
+		x.setGórnaS(false);
+	}
+	void laczGóra(ArrayList<Komórka> listGłowna, int kolum) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()-kolum-1);
+		this.dodawanieDoList(x);
+		x.dodawanieDoList(this);
+		this.setGórnaS(true);
+		x.setDolnaS(true);
+	}
+
+	void usunGóra(ArrayList<Komórka> listGłowna, int kolum) {
+		Komórka x = listGłowna.get(this.getNumerLiczba()-kolum-1);
+		this.usuwanieList(x);
+		x.usuwanieList(this);
+		this.setGórnaS(false);
+		x.setDolnaS(true);
+	}
+	
+	
+public	void sortowanietablicy(int start,int koniec, int liczbaKolumn) {
+		Komórka sprawdwPierwszej=this;
+		if(koniec - start >0 && koniec -start < liczbaKolumn ) { // ten sam rodzaj poziom komórke  idz w prawo
+			for(Komórka xx  : this.list) {
+				if(xx.getNumerLiczba() == this.getNumerLiczba()+1) {
+					if(this.list.size() >1) {
+						sprawdwPierwszej=xx;
+						}
+				}
+			}
+		}
+		if(koniec - start <0 && koniec -start < -liczbaKolumn ) { //ten sam rodzaj poziom komórke  idz w lewo
+			for(Komórka xx  : this.list) {
+				if(xx.getNumerLiczba() == this.getNumerLiczba()-1) {
+					if(this.list.size() >1) {
+						sprawdwPierwszej=xx;
+						}
+				}
+			}
+		}
+		if(koniec - start <0 && koniec - start <-liczbaKolumn) { // idz w góre jeśli koniec jest mniejszy niż początek 
+			for(Komórka xx  : this.list) {
+				if(xx.getNumerLiczba() == this.getNumerLiczba()- liczbaKolumn) {
+					if(this.list.size() >1) {
+					sprawdwPierwszej=xx;
+					}
+				}
+			}
+		}
+		if(koniec - start >0 && koniec - start >liczbaKolumn) { //idz w dół jeśli koniec jest większy niz poczatek 
+			for(Komórka xx  : this.list) {
+				if(xx.getNumerLiczba() == this.getNumerLiczba()+ liczbaKolumn) {
+					sprawdwPierwszej=xx;
+				}
+			}	
+		}
+		if(sprawdwPierwszej !=this) {
+			this.list.remove(sprawdwPierwszej);
+			this.list.add(0, sprawdwPierwszej);
+		}
+		
+	}
+	void przestawienieGórnejS(boolean góra, int  liczbaKolumn, ArrayList<Komórka> listaGłówna) {
+		if(góra==true) { // jeśli mamy połączyć w góre 
+			if(this.getNumerLiczba()<= liczbaKolumn) { // sprawdzamy czy możemy połączyć jeśli nie to dajemy komunikat 
+	
+			}
+			else {
+				if(this.getGórnaS()==false) { // sprawdzamy czy są połączone jeśli nie to łączymy 
+					this.laczGóra(listaGłówna, liczbaKolumn);
+				}
+				
+			}
+		}
+		else { // jeśli nie mamy połączyć w góre 
+			if(this.getNumerLiczba()<= liczbaKolumn) { // sprawdzamy czy możemy usumąć jeśli nie to dajemy komunikat 
+	
+			}
+			else {
+				if(this.getGórnaS()==true) { // sprawdzamy czy są połączone jeśli tak to usuwamy połaczenie 
+					this.usunGóra(listaGłówna, liczbaKolumn);
+				}
+				
+			}
+		}
+	}
+
+	void przestawieniePrawejS(boolean prawo, int liczbaKolumn, ArrayList<Komórka> listaGłówna) {
+		if(prawo==true) { // jeśli mamy połączyć w praw
+			if(this.getZnak().equals("O") || this.getZnak().equals("B")) {  // sprawdzamy czy możemy połączyć jeśli nie to dajemy komunikat 
+			
+			}
+			else {
+				if(this.getPrawS()==false) { // sprawdzamy czy są połączone jeśli nie to łączymy 
+					this.laczPraw(listaGłówna);
+					
+				}
+				
+			}
+		}
+		else { // jeśli nie mamy połączyć w praw
+			if(this.getZnak().equals("O") || this.getZnak().equals("B")){ // sprawdzamy czy możemy usumąć jeśli nie to dajemy komunikat 
+				
+				}
+		
+			else {
+				if(this.getPrawS()==true) { // sprawdzamy czy są połączone jeśli tak to usuwamy połaczenie 
+					this.usunPraw(listaGłówna);
+				}
+			}
+		}
+	}
+	
+	void przestawienieDółS(boolean dół, int liczbaKolumn, ArrayList<Komórka> listaGłówna) {
+		if(dół==true) { // jeśli mamy połączyć w dół
+			if(this.getZnak().equals("B") || this.getZnak().equals("L") ) { // sprawdzamy czy możemy połączyć jeśli nie to dajemy komunikat 
+				
+			}
+			else {
+				if(this.getDolnaS()==false) { // sprawdzamy czy nie są połączone jeśli nie to łączymy 
+					this.laczDół(listaGłówna,  liczbaKolumn);
+				}	
+			}
+		}
+		else { // jeśli nie mamy połączyć w dół
+			if(this.getZnak().equals("B") || this.getZnak().equals("L")  ) { // sprawdzamy czy możemy usumąć jeśli nie to dajemy komunikat 
+				
+			}
+			else {
+				if(this.getDolnaS()==true) { // sprawdzamy czy są połączone jeśli tak to usuwamy połaczenie 
+					this.usunDół(listaGłówna, liczbaKolumn);
+				}
+				
+			}
+		}
+	}
+
+	void przestawienieLewoS(boolean lewo, int liczbaKolumn, ArrayList<Komórka> listaGłówna) {
+		if(lewo==true) { // jeśli mamy połączyć w  lewo
+			if(this.getNumerLiczba() % liczbaKolumn ==1) {  // sprawdzamy czy możemy połączyć jeśli nie to dajemy komunikat 
+				System.out.println("Nie możemy dodać połączenia w lewą strone");
+			}
+			else {
+				if(this.getLewaS()==false) { // sprawdzamy czy nie są połączone jeśli to łączymy 
+					this.laczLewo(listaGłówna);
+				}
+				
+			}
+		}
+		else { // jeśli nie mamy połączyć w lewo
+			if(this.getNumerLiczba() % liczbaKolumn ==1) { // sprawdzamy czy możemy usumąć jeśli nie to dajemy komunikat 
+			}
+			else {
+				if(this.getLewaS()==true) { // sprawdzamy czy są połączone jeśli tak to usuwamy połaczenie 
+					this.usunLewo(listaGłówna);
+				}
+				
+			}
+		}
+	}
+	
+}
