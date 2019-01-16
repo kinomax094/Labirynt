@@ -1,0 +1,117 @@
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+public class Main extends Application{
+
+	public static void main(String[] args) {
+		launch(args);
+		
+		//Lab lab = new Lab(3,3);
+		//int x;
+		//int y;
+	//	boolean cc;
+	//	Scanner scan = new Scanner(System.in);
+	//	lab.drukujLab();
+		//while(true) {
+		/*	
+			boolean góra, lewa, dół, prawo;
+			
+			
+			System.out.println("Jeśli wprowadzisz 1  góra  przechodnia");
+			
+			x =scan.nextInt();
+			if(x==1) góra=true;
+			else góra=false;
+			
+			System.out.println("Jeśli wprowadzisz 1  lewo  przechodnia");
+			
+			x =scan.nextInt();
+			if(x==1) lewa=true;
+			else lewa=false;
+			
+			System.out.println("Jeśli wprowadzisz 1  dół   przechodnia");
+			x =scan.nextInt();
+			if(x==1) dół=true;
+			else  dół=false;
+			System.out.println("Jeśli wprowadzisz 1  prawo  przechodnia");
+			x =scan.nextInt();
+			if(x==1) prawo=true;
+			else  prawo=false;
+			
+			System.out.println("Podaj komórke ");
+			x=scan.nextInt();
+			lab.ustawianieScian(góra, lewa, dół, prawo,x );
+			
+			*/
+			//lab.drukujLab();
+			/*
+			
+			ArrayList<Komórka> list = new ArrayList<Komórka>(20);
+			System.out.println("Hemetka?");
+			x=scan.nextInt();
+			if(x==1) {
+				 cc=true;
+			}
+			else cc=false;
+			System.out.println("start");
+			x=scan.nextInt();
+			System.out.println("koniec");
+			y=scan.nextInt();  
+			lab.restetowanieLiczbaWywołań();
+			Date początek  = new Date();
+			
+			lab.szukajDrogi(x, y, list, cc);
+			Date finish = new Date();
+			lab.setNieMamyRozwiązania(true);
+			
+			
+			lab.resetowanieDostepnosci();
+			
+			
+			for(Komórka xx : list) {
+				System.out.println(xx.getNumerLiczba());
+			}
+			
+			 long  x2 =  finish.getTime()-początek.getTime();
+			System.out.println(x2);
+			System.out.println("Ile razy wywoływano liczbę "+lab.getLiczbaWywołań()); */
+	//	}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+		
+		
+		
+	
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(this.getClass().getResource("okno.fxml"));
+		BorderPane borderPane= loader.load();
+		
+		Scene scene = new Scene(borderPane);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Labirynt");
+		primaryStage.sizeToScene();
+		primaryStage.show();
+		
+	}
+}
